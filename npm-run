@@ -1,0 +1,28 @@
+#!/bin/sh
+
+USAGE="USAGE:\n\tnpm-run <command> <args-for-command : optional>"
+
+if [ $# -eq 0 ]; then
+  echo '[ERROR] command is required'
+  echo $USAGE
+  exit 1
+fi
+
+cmd=$1
+
+if [ $cmd = '-h' -o $cmd = '--help' ]; then
+  echo $USAGE
+  exit 0
+fi
+
+local_node_bin_dir="$(pwd)/node_modules/.bin"
+local_node_cmd="${local_node_bin_dir}/${cmd}"
+
+if [ ! -f $local_node_cmd ]; then
+  echo "[ERROR] \"${cmd}\" command is not installed in ${local_node_bin_dir}";
+  exit 1
+fi
+
+PATH=$local_node_bin_dir:$PATH
+$cmd ${@:2}
+
